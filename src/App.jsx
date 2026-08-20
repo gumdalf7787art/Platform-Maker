@@ -1022,6 +1022,7 @@ function FAQ() {
 }
 
 function Footer() {
+  const navigate = useNavigate();
   return (
     <footer className="bg-[#0a0a0a] text-[#888] pt-20 pb-12 px-6 border-t border-white/5 text-[14px] font-body">
       <div className="max-w-[1200px] mx-auto">
@@ -1037,8 +1038,11 @@ function Footer() {
               위대한 비즈니스는 빠른 실행에서 시작됩니다.<br/>
               당신의 혁신적인 아이디어를 세상에 가장 완벽한 형태로 내놓으세요.
             </p>
-            <button className="bg-white text-black text-[15px] font-bold py-4 px-8 rounded-full transition-transform duration-200 active:scale-95 hover:bg-gray-200">
-              무료 컨설팅 신청하기
+            <button 
+              onClick={() => navigate('/estimate')}
+              className="bg-white text-black text-[15px] font-bold py-4 px-8 rounded-full transition-transform duration-200 active:scale-95 hover:bg-gray-200"
+            >
+              프로젝트 문의하기
             </button>
           </div>
 
