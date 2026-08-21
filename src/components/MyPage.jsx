@@ -12,6 +12,18 @@ export default function MyPage({ setIsLoggedIn }) {
   const [activeMenu, setActiveMenu] = useState('dashboard');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   
+  // 로그인 시 저장한 유저 정보 불러오기
+  const [userProfile, setUserProfile] = useState(() => {
+    const saved = localStorage.getItem('userProfile');
+    return saved ? JSON.parse(saved) : {
+      name: '고객',
+      title: '대표',
+      email: '',
+      company: '소속 없음',
+      phone: '연락처 없음'
+    };
+  });
+  
   // 비밀번호 변경용 State
   const [pwdForm, setPwdForm] = useState({ current: '', new: '', confirm: '' });
   const [pwdErrors, setPwdErrors] = useState({ current: '', new: '', confirm: '' });
@@ -98,12 +110,12 @@ export default function MyPage({ setIsLoggedIn }) {
         {/* User Profile */}
         <div className="px-6 py-8 border-b border-black/5 flex flex-col items-center text-center">
           <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-[#5227FF] to-[#FF9FFC] p-[2px] mb-4 shadow-md">
-            <div className="w-full h-full bg-white rounded-full border-2 border-white overflow-hidden">
-              <img src="https://i.pravatar.cc/150?img=11" alt="Profile" className="w-full h-full object-cover" />
+            <div className="w-full h-full bg-white rounded-full border-2 border-white overflow-hidden flex items-center justify-center bg-gray-100 text-gray-500 font-bold text-[24px]">
+              {userProfile.name.charAt(0)}
             </div>
           </div>
-          <h3 className="font-bold text-[16px] text-black">홍길동 대표님</h3>
-          <p className="text-[13px] text-gray-500 mt-1">(주)스타트업컴퍼니</p>
+          <h3 className="font-bold text-[16px] text-black">{userProfile.name} {userProfile.title}님</h3>
+          <p className="text-[13px] text-gray-500 mt-1">{userProfile.company}</p>
         </div>
 
         {/* Navigation */}
@@ -160,7 +172,7 @@ export default function MyPage({ setIsLoggedIn }) {
             <h1 className="text-[24px] font-bold text-black tracking-tight mb-1">
               {menuItems.find(m => m.id === activeMenu)?.label}
             </h1>
-            <p className="text-[14px] text-gray-500">홍길동 대표님의 비즈니스 현황입니다.</p>
+            <p className="text-[14px] text-gray-500">{userProfile.name} {userProfile.title}님의 비즈니스 현황입니다.</p>
           </div>
           
           <div className="flex items-center space-x-4">
@@ -281,7 +293,9 @@ export default function MyPage({ setIsLoggedIn }) {
                 
                 <div className="flex items-center mb-8">
                   <div className="relative w-20 h-20 rounded-full group cursor-pointer mr-6">
-                    <img src="https://i.pravatar.cc/150?img=11" alt="Profile" className="w-full h-full rounded-full object-cover border-2 border-gray-100" />
+                    <div className="w-full h-full rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-[24px] border-2 border-gray-100">
+                      {userProfile.name.charAt(0)}
+                    </div>
                     <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                       <Camera size={24} className="text-white" />
                     </div>
@@ -296,25 +310,25 @@ export default function MyPage({ setIsLoggedIn }) {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[12px] font-semibold text-gray-500 mb-1.5">이름</label>
-                      <input type="text" defaultValue="홍길동" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-[14px] focus:bg-white focus:border-black outline-none transition-colors" />
+                      <input type="text" defaultValue={userProfile.name} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-[14px] focus:bg-white focus:border-black outline-none transition-colors" />
                     </div>
                     <div>
                       <label className="block text-[12px] font-semibold text-gray-500 mb-1.5">직급</label>
-                      <input type="text" defaultValue="대표" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-[14px] focus:bg-white focus:border-black outline-none transition-colors" />
+                      <input type="text" defaultValue={userProfile.title} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-[14px] focus:bg-white focus:border-black outline-none transition-colors" />
                     </div>
                   </div>
                   <div>
                     <label className="block text-[12px] font-semibold text-gray-500 mb-1.5">회사명 (소속)</label>
-                    <input type="text" defaultValue="(주)스타트업컴퍼니" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-[14px] focus:bg-white focus:border-black outline-none transition-colors" />
+                    <input type="text" defaultValue={userProfile.company} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-[14px] focus:bg-white focus:border-black outline-none transition-colors" />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-[12px] font-semibold text-gray-500 mb-1.5">이메일</label>
-                      <input type="email" defaultValue="hong@startup.com" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-[14px] focus:bg-white focus:border-black outline-none transition-colors" />
+                      <input type="email" defaultValue={userProfile.email} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-[14px] focus:bg-white focus:border-black outline-none transition-colors" />
                     </div>
                     <div>
                       <label className="block text-[12px] font-semibold text-gray-500 mb-1.5">연락처</label>
-                      <input type="tel" defaultValue="010-1234-5678" className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-[14px] focus:bg-white focus:border-black outline-none transition-colors" />
+                      <input type="tel" defaultValue={userProfile.phone} className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-[14px] focus:bg-white focus:border-black outline-none transition-colors" />
                     </div>
                   </div>
                   <button className="w-full bg-black text-white font-bold text-[14px] py-3 rounded-xl mt-4 hover:bg-gray-800 transition-colors">변경사항 저장</button>

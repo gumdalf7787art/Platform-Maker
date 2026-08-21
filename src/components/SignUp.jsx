@@ -107,6 +107,17 @@ export default function SignUp({ setIsLoggedIn }) {
       
       if (response.ok && result.success) {
         alert("회원가입이 완료되었습니다!");
+        
+        // 회원 정보를 localStorage에 저장 (로그인 및 마이페이지에서 사용)
+        const userProfile = {
+          name: formData.name,
+          email: formData.email,
+          title: '대표', // 가입 시 기본값
+          company: '(소속 정보 없음)', // 가입 시 기본값
+          phone: '(연락처 정보 없음)' // 가입 시 기본값
+        };
+        localStorage.setItem('userProfile', JSON.stringify(userProfile));
+
         if (setIsLoggedIn) setIsLoggedIn(true);
         window.scrollTo(0, 0);
         navigate('/');

@@ -27,6 +27,16 @@ export default function Login({ setIsLoggedIn }) {
     }
     // TODO: Add actual login logic here
     alert("로그인 성공!");
+    
+    const userProfile = {
+      name: formData.email.split('@')[0], // 데모용 (이메일 앞부분을 이름으로 사용)
+      email: formData.email,
+      title: '대표',
+      company: '(소속 정보 없음)',
+      phone: '(연락처 정보 없음)'
+    };
+    localStorage.setItem('userProfile', JSON.stringify(userProfile));
+
     if (setIsLoggedIn) {
       setIsLoggedIn(true);
     }
