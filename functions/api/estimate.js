@@ -90,6 +90,50 @@ export async function onRequestPost(context) {
       // 이메일 발송이 실패해도 DB 저장은 성공했으므로 계속 진행
     }
 
+    // 슬랙 알림 발송 로직 (웹훅 방식)
+    if (env.SLACK_WEBHOOK_URL) {
+      try {
+        await fetch(env.SLACK_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            blocks: [
+              {
+                type: "header",
+                text: {
+                  type: "plain_text",
+                  text: `🚀 새로운 프로젝트 문의가 접수되었습니다!`,
+                  emoji: true
+                }
+              },
+              {
+                type: "section",
+                fields: [
+                  { type: "mrkdwn", text: `*이름/직급:*\n${name} ${title ? `(${title})` : ''}` },
+                  { type: "mrkdwn", text: `*회사명:*\n${company}` },
+                  { type: "mrkdwn", text: `*연락처:*\n${phone}` },
+                  { type: "mrkdwn", text: `*이메일:*\n${email}` }
+                ]
+              },
+              {
+                type: "section",
+                fields: [
+                  { type: "mrkdwn", text: `*플랫폼 유형:*\n${platformType}` },
+                  { type: "mrkdwn", text: `*고객 유형:*\n${userType}` }
+                ]
+              },
+              {
+                type: "section",
+                text: { type: "mrkdwn", text: `*상세 내용:*\n\`\`\`${description || '내용 없음'}\`\`\`` }
+              }
+            ]
+          })
+        });
+      } catch (slackError) {
+        console.error("슬랙 알림 발송 실패:", slackError);
+      }
+    }
+
     return new Response(JSON.stringify({ 
       success: true, 
       message: "성공적으로 견적이 접수되었습니다." 
