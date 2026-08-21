@@ -6,8 +6,16 @@ import { useNavigate } from 'react-router-dom';
 export default function Estimate() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  
+  // Refs for validation scrolling
+  const nameRef = useRef(null);
+  const companyRef = useRef(null);
+  const phoneRef = useRef(null);
+  const emailRef = useRef(null);
+
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     name: '',
     title: '',
@@ -26,6 +34,10 @@ export default function Estimate() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    // 입력 시 해당 필드의 에러 메시지 제거
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: undefined }));
+    }
   };
 
   const handleFeatureToggle = (featureId) => {
@@ -55,14 +67,37 @@ export default function Estimate() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.company || !formData.phone || !formData.email) {
-      alert("필수 정보를 모두 입력해 주세요.");
+    setErrors({}); // 에러 초기화
+
+    if (!formData.name) {
+      setErrors({ name: "성함을 입력해 주세요." });
+      nameRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      nameRef.current?.focus();
       return;
     }
-
+    if (!formData.company) {
+      setErrors({ company: "회사명 또는 팀명을 입력해 주세요." });
+      companyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      companyRef.current?.focus();
+      return;
+    }
+    if (!formData.phone) {
+      setErrors({ phone: "연락처를 입력해 주세요." });
+      phoneRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      phoneRef.current?.focus();
+      return;
+    }
     const phoneRegex = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})[.-]?\d{3,4}[.-]?\d{4}$|^(15|16|18)\d{2}[.-]?\d{4}$/;
     if (!phoneRegex.test(formData.phone.replace(/\s+/g, ''))) {
-      alert("올바른 연락처(핸드폰 또는 유선 번호)를 입력해 주세요. (예: 010-1234-5678)");
+      setErrors({ phone: "올바른 연락처 형식(휴대폰/유선)을 입력해 주세요." });
+      phoneRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      phoneRef.current?.focus();
+      return;
+    }
+    if (!formData.email) {
+      setErrors({ email: "이메일을 입력해 주세요." });
+      emailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      emailRef.current?.focus();
       return;
     }
 
@@ -163,17 +198,33 @@ export default function Estimate() {
               기본 정보를 입력해 주세요
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
+              <div className="relative">
                 <label className="block text-[13px] font-semibold text-gray-700 mb-2">성함 *</label>
-                <input required type="text" name="name" value={formData.name} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-black focus:ring-1 focus:ring-black outline-none transition-all text-[15px]" placeholder="홍길동" />
+                <input ref={nameRef} type="text" name="name" value={formData.name} onChange={handleInputChange} className={`w-full px-4 py-3.5 bg-gray-50 border ${errors.name ? 'border-red-500 bg-red-50' : 'border-gray-200'} rounded-xl focus:bg-white focus:border-black focus:ring-1 focus:ring-black outline-none transition-all text-[15px]`} placeholder="홍길동" />
+                <AnimatePresence>
+                  {errors.name && (
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute -top-10 left-0 bg-red-500 text-white text-[12px] font-bold px-3 py-1.5 rounded-lg shadow-lg pointer-events-none z-10 whitespace-nowrap">
+                      {errors.name}
+                      <div className="absolute -bottom-1 left-4 w-2 h-2 bg-red-500 transform rotate-45"></div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
               <div>
                 <label className="block text-[13px] font-semibold text-gray-700 mb-2">직급 (선택)</label>
                 <input type="text" name="title" value={formData.title} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-black focus:ring-1 focus:ring-black outline-none transition-all text-[15px]" placeholder="대표, 이사, 팀장 등" />
               </div>
-              <div>
+              <div className="relative">
                 <label className="block text-[13px] font-semibold text-gray-700 mb-2">회사명 또는 팀명 *</label>
-                <input required type="text" name="company" value={formData.company} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-black focus:ring-1 focus:ring-black outline-none transition-all text-[15px]" placeholder="회사명 입력" />
+                <input ref={companyRef} type="text" name="company" value={formData.company} onChange={handleInputChange} className={`w-full px-4 py-3.5 bg-gray-50 border ${errors.company ? 'border-red-500 bg-red-50' : 'border-gray-200'} rounded-xl focus:bg-white focus:border-black focus:ring-1 focus:ring-black outline-none transition-all text-[15px]`} placeholder="회사명 입력" />
+                <AnimatePresence>
+                  {errors.company && (
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute -top-10 left-0 bg-red-500 text-white text-[12px] font-bold px-3 py-1.5 rounded-lg shadow-lg pointer-events-none z-10 whitespace-nowrap">
+                      {errors.company}
+                      <div className="absolute -bottom-1 left-4 w-2 h-2 bg-red-500 transform rotate-45"></div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
               <div>
                 <label className="block text-[13px] font-semibold text-gray-700 mb-2">회사 지역 (선택)</label>
@@ -183,13 +234,29 @@ export default function Estimate() {
                 <label className="block text-[13px] font-semibold text-gray-700 mb-2">회사 홈페이지 (선택)</label>
                 <input type="url" name="website" value={formData.website} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-black focus:ring-1 focus:ring-black outline-none transition-all text-[15px]" placeholder="https://..." />
               </div>
-              <div>
+              <div className="relative">
                 <label className="block text-[13px] font-semibold text-gray-700 mb-2">연락처 *</label>
-                <input required type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-black focus:ring-1 focus:ring-black outline-none transition-all text-[15px]" placeholder="010-0000-0000" />
+                <input ref={phoneRef} type="tel" name="phone" value={formData.phone} onChange={handleInputChange} className={`w-full px-4 py-3.5 bg-gray-50 border ${errors.phone ? 'border-red-500 bg-red-50' : 'border-gray-200'} rounded-xl focus:bg-white focus:border-black focus:ring-1 focus:ring-black outline-none transition-all text-[15px]`} placeholder="010-0000-0000" />
+                <AnimatePresence>
+                  {errors.phone && (
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute -top-10 left-0 bg-red-500 text-white text-[12px] font-bold px-3 py-1.5 rounded-lg shadow-lg pointer-events-none z-10 whitespace-nowrap">
+                      {errors.phone}
+                      <div className="absolute -bottom-1 left-4 w-2 h-2 bg-red-500 transform rotate-45"></div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
-              <div>
+              <div className="relative">
                 <label className="block text-[13px] font-semibold text-gray-700 mb-2">이메일 *</label>
-                <input required type="email" name="email" value={formData.email} onChange={handleInputChange} className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-black focus:ring-1 focus:ring-black outline-none transition-all text-[15px]" placeholder="example@email.com" />
+                <input ref={emailRef} type="email" name="email" value={formData.email} onChange={handleInputChange} className={`w-full px-4 py-3.5 bg-gray-50 border ${errors.email ? 'border-red-500 bg-red-50' : 'border-gray-200'} rounded-xl focus:bg-white focus:border-black focus:ring-1 focus:ring-black outline-none transition-all text-[15px]`} placeholder="example@email.com" />
+                <AnimatePresence>
+                  {errors.email && (
+                    <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 10 }} className="absolute -top-10 left-0 bg-red-500 text-white text-[12px] font-bold px-3 py-1.5 rounded-lg shadow-lg pointer-events-none z-10 whitespace-nowrap">
+                      {errors.email}
+                      <div className="absolute -bottom-1 left-4 w-2 h-2 bg-red-500 transform rotate-45"></div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             </div>
           </motion.div>
