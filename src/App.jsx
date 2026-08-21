@@ -1101,7 +1101,7 @@ function App() {
           </>
         } />
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signup" element={<SignUp setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/estimate" element={<Estimate />} />
         <Route path="/mypage" element={<MyPage setIsLoggedIn={setIsLoggedIn} />} />
       </Routes>

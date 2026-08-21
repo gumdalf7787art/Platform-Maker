@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Mail, Lock, CheckCircle2, XCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-export default function SignUp() {
+export default function SignUp({ setIsLoggedIn }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
@@ -107,6 +107,8 @@ export default function SignUp() {
       
       if (response.ok && result.success) {
         alert("회원가입이 완료되었습니다!");
+        if (setIsLoggedIn) setIsLoggedIn(true);
+        window.scrollTo(0, 0);
         navigate('/');
       } else {
         alert(result.message || "회원가입 중 오류가 발생했습니다.");
