@@ -153,6 +153,8 @@ export default function MyPage({ setIsLoggedIn }) {
           <button 
             onClick={() => {
               if (window.confirm("로그아웃 하시겠습니까?")) {
+                localStorage.removeItem('isLoggedIn');
+                localStorage.removeItem('userProfile');
                 if (setIsLoggedIn) setIsLoggedIn(false);
                 navigate('/');
               }
@@ -507,7 +509,11 @@ export default function MyPage({ setIsLoggedIn }) {
                 <button 
                   onClick={() => {
                     setShowDeleteModal(false);
-                    navigate('/'); // 탈퇴 후 홈으로 이동 처리 (임시)
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('userProfile');
+                    if (setIsLoggedIn) setIsLoggedIn(false);
+                    alert("회원 탈퇴가 완료되었습니다.");
+                    navigate('/');
                   }}
                   className="flex-1 bg-red-500 text-white font-bold text-[14px] py-3 rounded-xl hover:bg-red-600 transition-colors shadow-[0_4px_12px_rgba(239,68,68,0.3)]"
                 >
