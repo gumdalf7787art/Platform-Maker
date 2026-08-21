@@ -63,11 +63,11 @@ export async function onRequestPost(context) {
 
     if (!user) {
       // 신규 유저인 경우 회원가입 처리
-      const insertResult = await env.DB.prepare(
-        "INSERT INTO Users (name, email, password, role) VALUES (?, ?, ?, ?) RETURNING *"
-      ).bind(name, email, 'kakao_social_login', 'user').first();
+      await env.DB.prepare(
+        "INSERT INTO Users (name, email, password_hash, role) VALUES (?, ?, ?, ?)"
+      ).bind(name, email, 'kakao_social_login', 'user').run();
       
-      user = insertResult;
+      user = { name, email, role: 'user' };
     }
 
     // 클라이언트로 전달할 프로필 정보 구성 (localStorage에 저장됨)
