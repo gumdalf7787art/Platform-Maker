@@ -4,6 +4,7 @@ export async function onRequestPost(context) {
   try {
     const { code, redirectUri } = await request.json();
     const REST_API_KEY = "b0b92ea63baf92a771b860929aea52b1";
+    const CLIENT_SECRET = "JcECBMTgzr6zt91aYPEM643t0ve4fKGx";
 
     // 1. 카카오 토큰 발급 요청
     const tokenResponse = await fetch('https://kauth.kakao.com/oauth/token', {
@@ -14,6 +15,7 @@ export async function onRequestPost(context) {
       body: new URLSearchParams({
         grant_type: 'authorization_code',
         client_id: REST_API_KEY,
+        client_secret: CLIENT_SECRET,
         redirect_uri: redirectUri,
         code: code,
       }),
