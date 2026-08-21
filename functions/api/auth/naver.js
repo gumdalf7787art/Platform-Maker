@@ -4,7 +4,7 @@ export async function onRequestPost(context) {
   try {
     const { code, state } = await request.json();
     const CLIENT_ID = "UPoKeP1gguFzcstAcAiC";
-    const CLIENT_SECRET = "5HFk_Oon2i";
+    const CLIENT_SECRET = env.NAVER_CLIENT_SECRET;
 
     // 1. 네이버 토큰 발급 요청
     const tokenResponse = await fetch(`https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&code=${code}&state=${state}`, {
