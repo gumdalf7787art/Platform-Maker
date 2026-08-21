@@ -166,7 +166,15 @@ export default function SignUp({ setIsLoggedIn }) {
 
         {/* SNS Sign Up */}
         <div className="space-y-3 mb-8">
-          <button className="w-full flex items-center justify-center bg-[#FEE500] hover:bg-[#F4DC00] text-black font-semibold rounded-xl py-3.5 transition-colors">
+          <button 
+            type="button"
+            onClick={() => {
+              const REST_API_KEY = "9ad234f9497c33ced9faf4d7633d889b";
+              const REDIRECT_URI = window.location.origin + "/auth/kakao/callback";
+              window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+            }}
+            className="w-full flex items-center justify-center bg-[#FEE500] hover:bg-[#F4DC00] text-black font-semibold rounded-xl py-3.5 transition-colors"
+          >
             <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3c-4.97 0-9 3.185-9 7.114 0 2.54 1.708 4.77 4.258 5.962L6.23 20.31c-.134.48.363.81.77.562l4.63-3.136c.123.01.246.015.37.015 4.97 0 9-3.185 9-7.114C21 6.185 16.97 3 12 3z"/></svg>
             카카오로 3초 만에 시작하기
           </button>

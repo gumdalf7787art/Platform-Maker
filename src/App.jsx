@@ -10,6 +10,7 @@ import SignUp from './components/SignUp';
 import Login from './components/Login';
 import Estimate from './components/Estimate';
 import MyPage from './components/MyPage';
+import KakaoCallback from './components/KakaoCallback';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -1127,6 +1128,7 @@ function App() {
         <Route path="/signup" element={<SignUp setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/estimate" element={<Estimate />} />
         <Route path="/mypage" element={<MyPage setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/auth/kakao/callback" element={<KakaoCallback setIsLoggedIn={setIsLoggedIn} />} />
       </Routes>
     </div>
   );
