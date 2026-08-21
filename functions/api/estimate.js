@@ -61,7 +61,7 @@ export async function onRequestPost(context) {
         body: JSON.stringify({
           from: 'no-reply@platform-maker.com',
           to: env.RESEND_TO_EMAIL || 'goodduck2@naver.com', // 환경 변수 없으면 기본값으로
-          subject: `🚀 [Platform Maker] 새로운 견적 문의: ${company || name}`,
+          subject: `[Platform Maker] ${name}님으로부터 새로운 견적 문의`,
           html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
               <h2 style="color: #333;">새로운 견적 문의가 접수되었습니다.</h2>
