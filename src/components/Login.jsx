@@ -28,12 +28,18 @@ export default function Login({ setIsLoggedIn }) {
     // TODO: Add actual login logic here
     alert("로그인 성공!");
     
+    const existingProfileStr = localStorage.getItem('userProfile');
+    let existingProfile = null;
+    if (existingProfileStr) {
+      try { existingProfile = JSON.parse(existingProfileStr); } catch(e){}
+    }
+
     const userProfile = {
-      name: formData.email.split('@')[0], // 데모용 (이메일 앞부분을 이름으로 사용)
+      name: (existingProfile && existingProfile.email === formData.email) ? existingProfile.name : formData.email.split('@')[0],
       email: formData.email,
-      title: '대표',
-      company: '(소속 정보 없음)',
-      phone: '(연락처 정보 없음)'
+      title: (existingProfile && existingProfile.email === formData.email) ? existingProfile.title : '대표',
+      company: (existingProfile && existingProfile.email === formData.email) ? existingProfile.company : '(소속 정보 없음)',
+      phone: (existingProfile && existingProfile.email === formData.email) ? existingProfile.phone : '(연락처 정보 없음)'
     };
     localStorage.setItem('userProfile', JSON.stringify(userProfile));
 

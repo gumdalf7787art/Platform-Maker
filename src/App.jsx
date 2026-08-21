@@ -25,6 +25,16 @@ function Navbar({ isLoggedIn }) {
   const navigate = useNavigate();
   const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [userProfile, setUserProfile] = useState({ name: '고객' });
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      const saved = localStorage.getItem('userProfile');
+      if (saved) {
+        setUserProfile(JSON.parse(saved));
+      }
+    }
+  }, [isLoggedIn]);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     if (latest > 50) {
@@ -76,7 +86,9 @@ function Navbar({ isLoggedIn }) {
               className="flex items-center space-x-2 bg-gray-100 hover:bg-gray-200 py-1.5 px-3 rounded-full transition-colors"
             >
               <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-[#5227FF] to-[#FF9FFC] p-[1.5px]">
-                <img src="https://i.pravatar.cc/150?img=11" alt="Profile" className="w-full h-full rounded-full border border-white object-cover" />
+                <div className="w-full h-full bg-white rounded-full border border-white flex items-center justify-center bg-gray-100 text-gray-500 font-bold text-[10px]">
+                  {userProfile.name.charAt(0)}
+                </div>
               </div>
               <span className="text-[13px] font-bold text-gray-700 hidden sm:block">내 정보</span>
             </button>
