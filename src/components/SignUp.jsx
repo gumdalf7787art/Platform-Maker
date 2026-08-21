@@ -169,7 +169,7 @@ export default function SignUp({ setIsLoggedIn }) {
           <button 
             type="button"
             onClick={() => {
-              const REST_API_KEY = "9ad234f9497c33ced9faf4d7633d889b";
+              const REST_API_KEY = "b0b92ea63baf92a771b860929aea52b1";
               const REDIRECT_URI = window.location.origin + "/auth/kakao/callback";
               window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
             }}
