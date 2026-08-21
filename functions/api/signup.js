@@ -1,3 +1,5 @@
+import { signJWT } from './utils/jwt.js';
+
 export async function onRequestPost(context) {
   const { request, env } = context;
 
@@ -22,11 +24,16 @@ export async function onRequestPost(context) {
       `INSERT INTO users (email, password_hash, name) VALUES (?, ?, ?)`
     ).bind(email, passwordHash, name || '회원').run();
 
+    const token = await signJWT({ email: email, role: 'user' }, env.JWT_SECRET);
+
     return new Response(JSON.stringify({ 
       success: true, 
       message: "회원가입이 완료되었습니다." 
     }), {
-      headers: { "Content-Type": "application/json" }
+      headers: { 
+        "Content-Type": "application/json",
+        "Set-Cookie": `token=${token}; HttpOnly; Secure; Path=/; SameSite=Strict; Max-Age=86400`
+      }
     });
 
   } catch (error) {

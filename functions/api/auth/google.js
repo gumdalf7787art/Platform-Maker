@@ -1,3 +1,5 @@
+import { signJWT } from '../utils/jwt.js';
+
 export async function onRequestPost(context) {
   const { request, env } = context;
 
@@ -71,7 +73,7 @@ export async function onRequestPost(context) {
       user = { name, email, role: 'user' };
     }
 
-    // 클라이언트로 전달할 프로필 정보 구성 (localStorage에 저장됨)
+    // 클라이언트로 전달할 프로필 정보 구성 (화면 표시용)
     const userProfile = {
       name: user.name,
       email: user.email,
@@ -81,11 +83,17 @@ export async function onRequestPost(context) {
       role: user.role
     };
 
+    // 4. JWT 발급
+    const token = await signJWT({ email: user.email, role: user.role }, env.JWT_SECRET);
+
     return new Response(JSON.stringify({ 
       success: true, 
       user: userProfile 
     }), {
-      headers: { "Content-Type": "application/json" }
+      headers: { 
+        "Content-Type": "application/json",
+        "Set-Cookie": `token=${token}; HttpOnly; Secure; Path=/; SameSite=Strict; Max-Age=86400`
+      }
     });
 
   } catch (error) {

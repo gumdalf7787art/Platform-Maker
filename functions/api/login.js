@@ -1,3 +1,5 @@
+import { signJWT } from './utils/jwt.js';
+
 export async function onRequestPost(context) {
   const { request, env } = context;
 
@@ -34,20 +36,28 @@ export async function onRequestPost(context) {
       });
     }
 
+
+    const userProfile = {
+      name: result.name,
+      email: result.email,
+      title: '대표', // 일단 데모용으로 기본값 제공
+      company: '(소속 정보 없음)',
+      phone: '(연락처 정보 없음)',
+      role: result.role || 'user'
+    };
+
+    const token = await signJWT({ email: result.email, role: result.role || 'user' }, env.JWT_SECRET);
+
     return new Response(JSON.stringify({ 
       success: true, 
       message: "로그인 성공",
-      user: {
-        name: result.name,
-        email: result.email,
-        title: '대표', // 일단 데모용으로 기본값 제공
-        company: '(소속 정보 없음)',
-        phone: '(연락처 정보 없음)',
-        role: result.role || 'user'
-      }
+      user: userProfile
     }), {
       status: 200,
-      headers: { "Content-Type": "application/json" }
+      headers: { 
+        "Content-Type": "application/json",
+        "Set-Cookie": `token=${token}; HttpOnly; Secure; Path=/; SameSite=Strict; Max-Age=86400`
+      }
     });
 
   } catch (error) {
