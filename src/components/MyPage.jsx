@@ -24,6 +24,15 @@ export default function MyPage({ setIsLoggedIn }) {
     };
   });
   
+  // 내 견적 내역 불러오기
+  const [myProjects, setMyProjects] = useState(() => {
+    if (userProfile.email) {
+      const savedProjects = localStorage.getItem(`myProjects_${userProfile.email}`);
+      return savedProjects ? JSON.parse(savedProjects) : [];
+    }
+    return [];
+  });
+  
   // 비밀번호 변경용 State
   const [pwdForm, setPwdForm] = useState({ current: '', new: '', confirm: '' });
   const [pwdErrors, setPwdErrors] = useState({ current: '', new: '', confirm: '' });
@@ -200,33 +209,52 @@ export default function MyPage({ setIsLoggedIn }) {
                 <div className="relative z-10">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="font-bold text-[16px] text-black">진행 중인 프로젝트</h3>
-                    <span className="bg-gray-100 text-gray-500 text-[12px] font-bold px-3 py-1 rounded-full">개발 단계 (0주차)</span>
+                    <span className="bg-gray-100 text-gray-500 text-[12px] font-bold px-3 py-1 rounded-full">
+                      {myProjects.length > 0 ? myProjects[0].status : '접수 전'}
+                    </span>
                   </div>
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
-                    <h2 className="text-[22px] font-bold text-gray-400 tracking-tight">아직 진행중인 프로젝트가 없습니다.</h2>
+                    <h2 className={`text-[22px] font-bold tracking-tight ${myProjects.length > 0 ? 'text-black' : 'text-gray-400'}`}>
+                      {myProjects.length > 0 ? myProjects[0].title : '아직 진행중인 프로젝트가 없습니다.'}
+                    </h2>
                     <button 
                       onClick={() => navigate('/estimate')}
                       className="bg-black text-white text-[14px] font-bold px-6 py-2.5 rounded-full hover:bg-gray-800 transition-colors shadow-md w-fit"
                     >
-                      프로젝트 문의하기
+                      {myProjects.length > 0 ? '추가 문의하기' : '프로젝트 문의하기'}
                     </button>
                   </div>
                   
                   {/* Progress Bar */}
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-[13px] font-bold">
-                      <span className="text-gray-400">0% 완료</span>
-                      <span className="text-gray-400">목표 런칭일 : 미정</span>
+                  {myProjects.length > 0 ? (
+                    <div className="space-y-4">
+                      <div className="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                        <div className="flex justify-between text-[13px] mb-2">
+                          <span className="text-gray-500 font-medium">플랫폼 유형</span>
+                          <span className="font-bold text-black">{myProjects[0].platformType}</span>
+                        </div>
+                        <div className="flex justify-between text-[13px]">
+                          <span className="text-gray-500 font-medium">문의 접수일</span>
+                          <span className="font-bold text-black">{myProjects[0].date}</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
-                      <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: '0%' }}
-                        transition={{ duration: 1, delay: 0.2 }}
-                        className="h-full bg-gray-300 rounded-full"
-                      ></motion.div>
+                  ) : (
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-[13px] font-bold">
+                        <span className="text-gray-400">0% 완료</span>
+                        <span className="text-gray-400">목표 런칭일 : 미정</span>
+                      </div>
+                      <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          animate={{ width: '0%' }}
+                          transition={{ duration: 1, delay: 0.2 }}
+                          className="h-full bg-gray-300 rounded-full"
+                        ></motion.div>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
                 {/* Decorative graphic */}
                 <div className="absolute right-[-10%] bottom-[-20%] w-[200px] h-[200px] bg-gray-100 rounded-full blur-3xl pointer-events-none"></div>

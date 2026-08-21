@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, UploadCloud, CheckCircle2, MessageSquare, CreditCard, MapPin, Bell, Cpu, BarChart3, ShoppingBag, X, Smartphone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -30,6 +30,23 @@ export default function Estimate() {
     description: '',
     files: []
   });
+
+  useEffect(() => {
+    const saved = localStorage.getItem('userProfile');
+    if (saved) {
+      try {
+        const profile = JSON.parse(saved);
+        setFormData(prev => ({
+          ...prev,
+          name: profile.name || '',
+          email: profile.email || '',
+          company: profile.company !== '(소속 정보 없음)' ? profile.company : '',
+          title: profile.title !== '대표' ? profile.title : '',
+          phone: profile.phone !== '(연락처 정보 없음)' ? profile.phone : ''
+        }));
+      } catch (e) {}
+    }
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -126,6 +143,29 @@ export default function Estimate() {
       
       if (response.ok && result.success) {
         setIsSubmitted(true);
+        
+        // 로그인 상태라면 내 프로젝트 목록에 추가
+        const savedProfile = localStorage.getItem('userProfile');
+        if (savedProfile) {
+          try {
+            const profile = JSON.parse(savedProfile);
+            const myProjectsStr = localStorage.getItem(`myProjects_${profile.email}`);
+            let myProjects = myProjectsStr ? JSON.parse(myProjectsStr) : [];
+            
+            myProjects.push({
+              id: Date.now(),
+              date: new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' }),
+              title: '프로젝트 문의',
+              status: '접수 대기', // 접수 대기, 검토 중, 미팅 예정 등
+              platformType: formData.platformType || '미지정',
+              description: formData.description
+            });
+            
+            localStorage.setItem(`myProjects_${profile.email}`, JSON.stringify(myProjects));
+          } catch(e) {
+            console.error("프로젝트 저장 실패:", e);
+          }
+        }
       } else {
         alert(result.message || "견적 접수 중 오류가 발생했습니다.");
       }
