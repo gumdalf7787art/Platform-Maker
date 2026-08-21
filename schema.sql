@@ -8,13 +8,22 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- 2. 견적 문의 테이블 (Estimates)
+DROP TABLE IF EXISTS estimates;
+
 CREATE TABLE IF NOT EXISTS estimates (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  user_email TEXT,
-  project_type TEXT,
-  budget TEXT,
+  name TEXT,
+  title TEXT,
+  company TEXT,
+  region TEXT,
+  website TEXT,
+  phone TEXT,
+  email TEXT,
+  user_type TEXT,
+  platform_type TEXT,
+  features TEXT,
   description TEXT,
-  attachment_url TEXT, -- R2에 업로드될 이미지 주소
+  attachment_urls TEXT,
   status TEXT DEFAULT 'PENDING',
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

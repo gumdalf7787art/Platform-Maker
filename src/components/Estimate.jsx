@@ -7,6 +7,7 @@ export default function Estimate() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     title: '',
@@ -52,10 +53,46 @@ export default function Estimate() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here we would normally send data to a backend
-    setIsSubmitted(true);
+    if (!formData.name || !formData.company || !formData.phone || !formData.email) {
+      alert("필수 정보를 모두 입력해 주세요.");
+      return;
+    }
+
+    setIsLoading(true);
+    
+    try {
+      const data = new FormData();
+      Object.keys(formData).forEach(key => {
+        if (key === 'files') {
+          formData.files.forEach(file => {
+            data.append('files', file);
+          });
+        } else if (key === 'features') {
+          data.append(key, JSON.stringify(formData.features));
+        } else {
+          data.append(key, formData[key]);
+        }
+      });
+
+      const response = await fetch('/api/estimate', {
+        method: 'POST',
+        body: data // multipart/form-data로 자동 설정됨
+      });
+
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
+        setIsSubmitted(true);
+      } else {
+        alert(result.message || "견적 접수 중 오류가 발생했습니다.");
+      }
+    } catch(err) {
+      alert("서버와 통신할 수 없습니다.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const featureOptions = [
@@ -330,9 +367,10 @@ export default function Estimate() {
           >
             <button 
               type="submit"
-              className="bg-black text-white font-bold text-[18px] px-12 py-5 rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.15)] hover:bg-gray-800 hover:shadow-[0_15px_40px_rgba(0,0,0,0.2)] transition-all duration-300 transform active:scale-95"
+              disabled={isLoading}
+              className="bg-black text-white font-bold text-[18px] px-12 py-5 rounded-full shadow-[0_10px_30px_rgba(0,0,0,0.15)] hover:bg-gray-800 hover:shadow-[0_15px_40px_rgba(0,0,0,0.2)] transition-all duration-300 transform active:scale-95 disabled:opacity-50 disabled:active:scale-100"
             >
-              견적 상담 신청하기
+              {isLoading ? '접수 처리 중...' : '견적 상담 신청하기'}
             </button>
           </motion.div>
 
