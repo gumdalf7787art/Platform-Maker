@@ -108,6 +108,13 @@ export async function onRequestPost(context) {
               },
               {
                 type: "section",
+                text: {
+                  type: "mrkdwn",
+                  text: `<!channel> 확인 부탁드립니다.`
+                }
+              },
+              {
+                type: "section",
                 fields: [
                   { type: "mrkdwn", text: `*이름/직급:*\n${name} ${title ? `(${title})` : ''}` },
                   { type: "mrkdwn", text: `*회사명:*\n${company}` },
