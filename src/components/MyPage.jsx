@@ -507,7 +507,21 @@ export default function MyPage({ setIsLoggedIn }) {
                   취소
                 </button>
                 <button 
-                  onClick={() => {
+                  onClick={async () => {
+                    try {
+                      const saved = localStorage.getItem('userProfile');
+                      if (saved) {
+                        const profile = JSON.parse(saved);
+                        await fetch('/api/withdraw', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ email: profile.email })
+                        });
+                      }
+                    } catch(e) {
+                      console.error("탈퇴 처리 중 오류:", e);
+                    }
+                    
                     setShowDeleteModal(false);
                     localStorage.removeItem('isLoggedIn');
                     localStorage.removeItem('userProfile');
