@@ -23,7 +23,11 @@ export async function onRequestPost(context) {
 
     if (!tokenResponse.ok) {
       console.error("Kakao Token Error:", tokenData);
-      return new Response(JSON.stringify({ success: false, message: "카카오 토큰 발급 실패" }), { status: 400 });
+      return new Response(JSON.stringify({ 
+        success: false, 
+        message: "카카오 토큰 발급 실패", 
+        details: tokenData 
+      }), { status: 400 });
     }
 
     const accessToken = tokenData.access_token;

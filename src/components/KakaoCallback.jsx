@@ -34,7 +34,7 @@ const KakaoCallback = ({ setIsLoggedIn }) => {
           window.scrollTo(0, 0);
           navigate('/'); // 메인 페이지로 이동
         } else {
-          alert(result.message || "카카오 로그인 중 오류가 발생했습니다.");
+          alert(`에러: ${result.message}\n상세: ${JSON.stringify(result.details || {})}`);
           navigate('/login');
         }
       } catch (error) {
