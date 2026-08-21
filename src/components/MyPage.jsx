@@ -7,7 +7,7 @@ import {
   Bell, ChevronRight, Download, FileText, Camera, Check
 } from 'lucide-react';
 
-export default function MyPage() {
+export default function MyPage({ setIsLoggedIn }) {
   const navigate = useNavigate();
   const [activeMenu, setActiveMenu] = useState('dashboard');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -138,7 +138,15 @@ export default function MyPage() {
             <ArrowLeft size={18} className="mr-3 text-gray-400" />
             메인으로 돌아가기
           </button>
-          <button className="w-full flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-[14px] font-medium text-red-500 hover:bg-red-50 mt-1">
+          <button 
+            onClick={() => {
+              if (window.confirm("로그아웃 하시겠습니까?")) {
+                if (setIsLoggedIn) setIsLoggedIn(false);
+                navigate('/');
+              }
+            }}
+            className="w-full flex items-center px-4 py-3 rounded-xl transition-all duration-200 text-[14px] font-medium text-red-500 hover:bg-red-50 mt-1"
+          >
             <LogOut size={18} className="mr-3" />
             로그아웃
           </button>

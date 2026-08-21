@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, Mail, Lock } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-export default function Login() {
+export default function Login({ setIsLoggedIn }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
@@ -27,6 +27,9 @@ export default function Login() {
     }
     // TODO: Add actual login logic here
     alert("로그인 성공!");
+    if (setIsLoggedIn) {
+      setIsLoggedIn(true);
+    }
     navigate('/');
   };
 

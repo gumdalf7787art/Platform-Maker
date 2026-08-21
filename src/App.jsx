@@ -1074,7 +1074,13 @@ function Footer() {
 }
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem('isLoggedIn') === 'true';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('isLoggedIn', isLoggedIn);
+  }, [isLoggedIn]);
 
   return (
     <div className="w-full min-h-screen bg-surface-canvas">
@@ -1094,10 +1100,10 @@ function App() {
             <Footer />
           </>
         } />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/estimate" element={<Estimate />} />
-        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/mypage" element={<MyPage setIsLoggedIn={setIsLoggedIn} />} />
       </Routes>
     </div>
   );
