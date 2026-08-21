@@ -4,8 +4,8 @@ export async function onRequestPost(context) {
   try {
     const { code, redirectUri } = await request.json();
     const CLIENT_ID = "1009526923706-tjpv4vi3li8clbgsrlbtgsstkjeohjp6.apps.googleusercontent.com";
-    // 깃허브 보안 정책(Secret Scanning) 우회를 위해 문자열을 분리합니다.
-    const CLIENT_SECRET = "GOCSPX-" + "N5WWL_HSaETsd9hc55dV6XQwuCNV";
+    // 클라우드플레어 환경변수에서 안전하게 시크릿 키를 불러옵니다.
+    const CLIENT_SECRET = env.GOOGLE_CLIENT_SECRET;
 
     // 1. 구글 토큰 발급 요청
     const tokenResponse = await fetch('https://oauth2.googleapis.com/token', {
