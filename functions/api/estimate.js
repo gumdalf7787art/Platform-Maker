@@ -59,8 +59,8 @@ export async function onRequestPost(context) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          from: 'onboarding@resend.dev',
-          to: env.RESEND_TO_EMAIL, // 환경 변수로 수신자 이메일 설정
+          from: 'no-reply@platform-maker.com',
+          to: env.RESEND_TO_EMAIL || 'goodduck2@naver.com', // 환경 변수 없으면 기본값으로
           subject: `🚀 [Platform Maker] 새로운 견적 문의: ${company || name}`,
           html: `
             <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto;">
