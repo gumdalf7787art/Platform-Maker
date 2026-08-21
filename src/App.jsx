@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
-import { Routes, Route, useNavigate, Link } from 'react-router-dom';
+import { Routes, Route, useNavigate, Link, useLocation } from 'react-router-dom';
 import { Apple, Search, ShoppingBag, Menu, ArrowRight, Sun } from 'lucide-react';
 import MoltenMetal from './components/MoltenMetal';
 import SplitText from './components/SplitText';
@@ -10,6 +10,16 @@ import SignUp from './components/SignUp';
 import Login from './components/Login';
 import Estimate from './components/Estimate';
 import MyPage from './components/MyPage';
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 
 function Navbar({ isLoggedIn }) {
   const navigate = useNavigate();
@@ -1084,6 +1094,7 @@ function App() {
 
   return (
     <div className="w-full min-h-screen bg-surface-canvas">
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={
           <>

@@ -40,6 +40,7 @@ export default function Login({ setIsLoggedIn }) {
     if (setIsLoggedIn) {
       setIsLoggedIn(true);
     }
+    window.scrollTo(0, 0);
     navigate('/');
   };
 
