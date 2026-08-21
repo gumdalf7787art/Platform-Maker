@@ -19,34 +19,40 @@ export default function Login({ setIsLoggedIn }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.email || !formData.password) {
       alert("이메일과 비밀번호를 입력해주세요.");
       return;
     }
-    // TODO: Add actual login logic here
     
-    const existingProfileStr = localStorage.getItem('userProfile');
-    let existingProfile = null;
-    if (existingProfileStr) {
-      try { existingProfile = JSON.parse(existingProfileStr); } catch(e){}
-    }
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: formData.email, password: formData.password })
+      });
+      const result = await response.json();
 
-    const userProfile = {
-      name: (existingProfile && existingProfile.email === formData.email) ? existingProfile.name : formData.email.split('@')[0],
-      email: formData.email,
-      title: (existingProfile && existingProfile.email === formData.email) ? existingProfile.title : '대표',
-      company: (existingProfile && existingProfile.email === formData.email) ? existingProfile.company : '(소속 정보 없음)',
-      phone: (existingProfile && existingProfile.email === formData.email) ? existingProfile.phone : '(연락처 정보 없음)'
-    };
-    localStorage.setItem('userProfile', JSON.stringify(userProfile));
+      if (response.ok && result.success) {
+        localStorage.setItem('userProfile', JSON.stringify(result.user));
 
-    if (setIsLoggedIn) {
-      setIsLoggedIn(true);
+        if (setIsLoggedIn) {
+          setIsLoggedIn(true);
+        }
+        window.scrollTo(0, 0);
+        navigate('/');
+      } else {
+        alert(result.message || "이메일 또는 비밀번호가 올바르지 않습니다.");
+      }
+    } catch (error) {
+      alert("서버와 통신할 수 없습니다.");
+    } finally {
+      setIsLoading(false);
     }
-    window.scrollTo(0, 0);
-    navigate('/');
   };
 
   return (
@@ -164,9 +170,10 @@ export default function Login({ setIsLoggedIn }) {
 
           <button 
             type="submit"
-            className="w-full bg-black text-white font-bold rounded-xl py-4 mt-6 transition-transform duration-200 active:scale-95 hover:bg-gray-800"
+            disabled={isLoading}
+            className={`w-full text-white font-bold rounded-xl py-4 mt-6 transition-transform duration-200 active:scale-95 ${isLoading ? 'bg-gray-400' : 'bg-black hover:bg-gray-800'}`}
           >
-            이메일로 로그인
+            {isLoading ? '로그인 중...' : '이메일로 로그인'}
           </button>
         </form>
         
