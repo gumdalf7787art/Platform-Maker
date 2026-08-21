@@ -26,7 +26,6 @@ export default function Login({ setIsLoggedIn }) {
       return;
     }
     // TODO: Add actual login logic here
-    alert("로그인 성공!");
     
     const existingProfileStr = localStorage.getItem('userProfile');
     let existingProfile = null;
