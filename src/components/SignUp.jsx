@@ -6,11 +6,13 @@ import { useNavigate } from 'react-router-dom';
 export default function SignUp() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
     emailConfirm: '',
     password: '',
     passwordConfirm: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const [errors, setErrors] = useState({
     email: '',
@@ -82,14 +84,38 @@ export default function SignUp() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.email || !formData.password || errors.email || errors.password || errors.passwordConfirm) {
+    if (!formData.name || !formData.email || !formData.password || errors.email || errors.password || errors.passwordConfirm) {
       alert("입력하신 정보를 다시 확인해주세요.");
       return;
     }
-    alert("회원가입이 완료되었습니다!");
-    navigate('/');
+    
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password
+        })
+      });
+
+      const result = await response.json();
+      
+      if (response.ok && result.success) {
+        alert("회원가입이 완료되었습니다!");
+        navigate('/');
+      } else {
+        alert(result.message || "회원가입 중 오류가 발생했습니다.");
+      }
+    } catch (error) {
+      alert("서버와 통신할 수 없습니다.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -152,6 +178,20 @@ export default function SignUp() {
 
         {/* Email Form */}
         <form onSubmit={handleSubmit} className="space-y-5">
+          <div>
+            <label className="block text-[13px] font-semibold text-gray-700 mb-2">이름</label>
+            <div className="relative">
+              <input 
+                type="text" 
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                className="w-full px-4 py-3.5 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-black focus:ring-1 focus:ring-black outline-none transition-all text-[15px]"
+                placeholder="홍길동"
+                required
+              />
+            </div>
+          </div>
           <div>
             <label className="block text-[13px] font-semibold text-gray-700 mb-2">이메일 주소</label>
             <div className="relative">
@@ -235,9 +275,10 @@ export default function SignUp() {
 
           <button 
             type="submit"
-            className="w-full bg-black text-white font-bold rounded-xl py-4 mt-4 transition-transform duration-200 active:scale-95 hover:bg-gray-800"
+            disabled={isLoading}
+            className="w-full bg-black text-white font-bold rounded-xl py-4 mt-4 transition-transform duration-200 active:scale-95 hover:bg-gray-800 disabled:opacity-50 disabled:active:scale-100"
           >
-            이메일로 가입하기
+            {isLoading ? '가입 처리 중...' : '이메일로 가입하기'}
           </button>
         </form>
         
