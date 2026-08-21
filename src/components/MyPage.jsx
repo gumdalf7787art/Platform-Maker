@@ -123,7 +123,7 @@ export default function MyPage({ setIsLoggedIn }) {
               {userProfile.name.charAt(0)}
             </div>
           </div>
-          <h3 className="font-bold text-[16px] text-black">{userProfile.name} {userProfile.title}님</h3>
+          <h3 className="font-bold text-[16px] text-black">{userProfile.name}님</h3>
           <p className="text-[13px] text-gray-500 mt-1">{userProfile.company}</p>
         </div>
 
@@ -183,7 +183,7 @@ export default function MyPage({ setIsLoggedIn }) {
             <h1 className="text-[24px] font-bold text-black tracking-tight mb-1">
               {menuItems.find(m => m.id === activeMenu)?.label}
             </h1>
-            <p className="text-[14px] text-gray-500">{userProfile.name} {userProfile.title}님의 비즈니스 현황입니다.</p>
+            <p className="text-[14px] text-gray-500">{userProfile.name}님의 비즈니스 현황입니다.</p>
           </div>
           
           <div className="flex items-center space-x-4">
