@@ -60,6 +60,12 @@ export default function Estimate() {
       return;
     }
 
+    const phoneRegex = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})[.-]?\d{3,4}[.-]?\d{4}$|^(15|16|18)\d{2}[.-]?\d{4}$/;
+    if (!phoneRegex.test(formData.phone.replace(/\s+/g, ''))) {
+      alert("올바른 연락처(핸드폰 또는 유선 번호)를 입력해 주세요. (예: 010-1234-5678)");
+      return;
+    }
+
     setIsLoading(true);
     
     try {
