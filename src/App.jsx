@@ -1099,13 +1099,44 @@ function Footer() {
 }
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return localStorage.getItem('isLoggedIn') === 'true';
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isCheckingSession, setIsCheckingSession] = useState(true);
 
   useEffect(() => {
-    localStorage.setItem('isLoggedIn', isLoggedIn);
-  }, [isLoggedIn]);
+    // 앱 초기 로드 시 백엔드(/api/auth/me)로 요청을 보내 HttpOnly 쿠키(JWT)가 유효한지 검증합니다.
+    const checkSession = async () => {
+      try {
+        const response = await fetch('/api/auth/me');
+        const data = await response.json();
+        
+        if (data.success && data.user) {
+          setIsLoggedIn(true);
+          // 프론트엔드 UI용으로만 로컬 스토리지에 최신 유저 정보를 업데이트합니다.
+          localStorage.setItem('userProfile', JSON.stringify(data.user));
+          localStorage.setItem('isLoggedIn', 'true');
+        } else {
+          // 토큰이 없거나 만료된 경우 모든 로컬 캐시를 지우고 로그아웃 상태로 만듭니다.
+          setIsLoggedIn(false);
+          localStorage.removeItem('userProfile');
+          localStorage.removeItem('isLoggedIn');
+        }
+      } catch (error) {
+        console.error('Session check error:', error);
+        setIsLoggedIn(false);
+        localStorage.removeItem('userProfile');
+        localStorage.removeItem('isLoggedIn');
+      } finally {
+        setIsCheckingSession(false);
+      }
+    };
+
+    checkSession();
+  }, []);
+
+  if (isCheckingSession) {
+    // 세션 확인 중일 때는 아무것도 그리지 않거나 로딩 스피너를 보여줄 수 있습니다.
+    return <div className="min-h-screen bg-surface-canvas flex items-center justify-center"></div>;
+  }
 
   return (
     <div className="w-full min-h-screen bg-surface-canvas">

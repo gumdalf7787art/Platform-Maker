@@ -168,8 +168,13 @@ export default function MyPage({ setIsLoggedIn }) {
             메인으로 돌아가기
           </button>
           <button 
-            onClick={() => {
+            onClick={async () => {
               if (window.confirm("로그아웃 하시겠습니까?")) {
+                try {
+                  await fetch('/api/auth/logout', { method: 'POST' });
+                } catch (e) {
+                  console.error(e);
+                }
                 localStorage.removeItem('isLoggedIn');
                 localStorage.removeItem('userProfile');
                 if (setIsLoggedIn) setIsLoggedIn(false);
