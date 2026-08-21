@@ -20,7 +20,8 @@ export default function MyPage({ setIsLoggedIn }) {
       title: '대표',
       email: '',
       company: '소속 없음',
-      phone: '연락처 없음'
+      phone: '연락처 없음',
+      role: 'user'
     };
   });
   
@@ -123,7 +124,14 @@ export default function MyPage({ setIsLoggedIn }) {
               {userProfile.name.charAt(0)}
             </div>
           </div>
-          <h3 className="font-bold text-[16px] text-black">{userProfile.name}님</h3>
+          <h3 className="font-bold text-[16px] text-black flex items-center justify-center gap-1">
+            {userProfile.name}님
+            {userProfile.role === 'admin' && (
+              <span className="bg-[#5227FF]/10 text-[#5227FF] text-[10px] font-bold px-2 py-0.5 rounded-full ml-1">
+                관리자
+              </span>
+            )}
+          </h3>
           <p className="text-[13px] text-gray-500 mt-1">{userProfile.company}</p>
         </div>
 

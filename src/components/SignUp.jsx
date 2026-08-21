@@ -112,9 +112,10 @@ export default function SignUp({ setIsLoggedIn }) {
         const userProfile = {
           name: formData.name,
           email: formData.email,
-          title: '대표', // 가입 시 기본값
+          title: '', // 가입 시 기본값
           company: '(소속 정보 없음)', // 가입 시 기본값
-          phone: '(연락처 정보 없음)' // 가입 시 기본값
+          phone: '(연락처 정보 없음)', // 가입 시 기본값
+          role: 'user' // 가입 시 기본 권한
         };
         localStorage.setItem('userProfile', JSON.stringify(userProfile));
 

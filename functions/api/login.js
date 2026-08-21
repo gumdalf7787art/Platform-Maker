@@ -42,7 +42,8 @@ export async function onRequestPost(context) {
         email: result.email,
         title: '대표', // 일단 데모용으로 기본값 제공
         company: '(소속 정보 없음)',
-        phone: '(연락처 정보 없음)'
+        phone: '(연락처 정보 없음)',
+        role: result.role || 'user'
       }
     }), {
       status: 200,
