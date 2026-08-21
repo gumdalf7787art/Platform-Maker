@@ -12,6 +12,7 @@ import Estimate from './components/Estimate';
 import MyPage from './components/MyPage';
 import KakaoCallback from './components/KakaoCallback';
 import NaverCallback from './components/NaverCallback';
+import GoogleCallback from './components/GoogleCallback';
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -1131,6 +1132,7 @@ function App() {
         <Route path="/mypage" element={<MyPage setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/auth/kakao/callback" element={<KakaoCallback setIsLoggedIn={setIsLoggedIn} />} />
         <Route path="/auth/naver/callback" element={<NaverCallback setIsLoggedIn={setIsLoggedIn} />} />
+        <Route path="/auth/google/callback" element={<GoogleCallback setIsLoggedIn={setIsLoggedIn} />} />
       </Routes>
     </div>
   );

@@ -194,8 +194,16 @@ export default function SignUp({ setIsLoggedIn }) {
               <span className="font-bold text-[18px] mr-2">N</span>
               네이버
             </button>
-            <button className="flex-1 flex items-center justify-center bg-white border border-gray-200 hover:bg-gray-50 text-black font-semibold rounded-xl py-3.5 transition-colors">
-              <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44-3.95 0-7.14-3.19-7.14-7.14s3.19-7.14 7.14-7.14c1.9 0 3.49.7 4.67 1.81l2.12-2.12C17.18 2.76 14.85 1.5 12.18 1.5 6.28 1.5 1.5 6.28 1.5 12.18s4.78 10.68 10.68 10.68c6.16 0 10.4-4.34 10.4-10.59 0-.82-.1-1.63-.26-2.4z"/></svg>
+            <button 
+            type="button"
+            onClick={() => {
+              const CLIENT_ID = "1009526923706-tjpv4vi3li8clbgsrlbtgsstkjeohjp6.apps.googleusercontent.com";
+              const REDIRECT_URI = window.location.origin + "/auth/google/callback";
+              window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=email%20profile`;
+            }}
+            className="flex-1 flex items-center justify-center bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 font-semibold rounded-xl py-3.5 transition-colors"
+          >
+            <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor"><path d="M21.35 11.1h-9.17v2.73h6.51c-.33 3.81-3.5 5.44-6.5 5.44-3.95 0-7.14-3.19-7.14-7.14s3.19-7.14 7.14-7.14c1.9 0 3.49.7 4.67 1.81l2.12-2.12C17.18 2.76 14.85 1.5 12.18 1.5 6.28 1.5 1.5 6.28 1.5 12.18s4.78 10.68 10.68 10.68c6.16 0 10.4-4.34 10.4-10.59 0-.82-.1-1.63-.26-2.4z"/></svg>
               구글
             </button>
           </div>
