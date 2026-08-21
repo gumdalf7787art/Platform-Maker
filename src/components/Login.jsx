@@ -103,7 +103,17 @@ export default function Login({ setIsLoggedIn }) {
           </button>
           
           <div className="flex space-x-3">
-            <button className="flex-1 flex items-center justify-center bg-[#03C75A] hover:bg-[#02b350] text-white font-semibold rounded-xl py-3.5 transition-colors">
+            <button 
+              type="button"
+              onClick={() => {
+                const CLIENT_ID = "UPoKeP1gguFzcstAcAiC";
+                const REDIRECT_URI = window.location.origin + "/auth/naver/callback";
+                const STATE = Math.random().toString(36).substring(2, 15);
+                sessionStorage.setItem('naver_state', STATE);
+                window.location.href = `https://nid.naver.com/oauth2.0/authorize?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&state=${STATE}`;
+              }}
+              className="flex-1 flex items-center justify-center bg-[#03C75A] hover:bg-[#02b350] text-white font-semibold rounded-xl py-3.5 transition-colors"
+            >
               <span className="font-bold text-[18px] mr-2">N</span>
               네이버
             </button>
