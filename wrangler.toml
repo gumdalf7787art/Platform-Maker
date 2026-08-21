@@ -9,4 +9,4 @@ database_id = "2980a6aa-1ef6-435c-914b-c3f64fe5443b"
 
 [[r2_buckets]]
 binding = "BUCKET"
-bucket_name = "platform-maker-assets"
+bucket_name = "pm-assets"
